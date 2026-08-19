@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        // Edge case: overflow
+        if(dividend == INT_MIN && divisor == -1) return INT_MAX;
+        
+        // sign check karo, bina * ke
+        bool negative = (dividend < 0) ^ (divisor < 0);
+        
+        // long long me convert, abs ke liye
+        long long a = dividend;
+        long long b = divisor;
+        a = a < 0 ? -a : a; // abs
+        b = b < 0 ? -b : b;
+        
+        long long ans = 0;
+        
+        while(a >= b){
+            long temp = b;
+            long multiple = 1;
+            
+            // sabse bada shift dhoondo jisse temp <= a rahe
+            while(a >= (temp << 1)){
+                temp <<= 1;
+                multiple <<= 1;
+            }
+            
+            a -= temp;
+            ans += multiple;
+        }
+        
+        // bina * ke sign lagao
+        if(negative) ans = 0 - ans;
+        
+        // clamp to 32-bit range
+        if(ans > INT_MAX) return INT_MAX;
+        if(ans < INT_MIN) return INT_MIN;
+        return (int)ans;
+    }
+};
